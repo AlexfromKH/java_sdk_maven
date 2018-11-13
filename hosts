@@ -1,0 +1,10 @@
+#---
+[local]
+localhost
+[ubuntu]
+192.168.88.11
+
+#- hosts: all
+#become: yes
+#become_user: ansible
+#...

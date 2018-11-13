@@ -1,0 +1,17 @@
+---
+#[local]
+#localhost
+#[ubuntu]
+#192.168.88.11
+
+- hosts: all
+  gather_facts: yes
+  become: yes
+  tasks:
+  #  - name: test command
+  #    command: echo 'alles leuft gut soweit'
+
+    - name: Display the config
+      debug:
+        msg: "The hostname is {{ ansible_hostname }} and the OS is {{ ansible_version }}"
+...

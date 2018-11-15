@@ -13,7 +13,24 @@
        name: openjdk-8-jdk
        state: present
        update_cache: yes
+     notify: 
+       - add Add $JAVA_HOME environment variable
 
-   - name: Add $JAVA_HOME environment variable
+   handlers:
+   - name: add $JAVA_HOME environment variable
      shell: echo 'JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre/bin' >> /etc/environment      
-...
+
+   - name: download marven in user home dir
+     file:
+       scr: http://apache.lauf-forum.at/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz
+       dest: {{ ansible_env.HOME }}
+
+   - name: unzip maven to user home dir
+     unarchive:
+       scr: apache-maven-3.6.0-bin.tar.gz
+       dest: {{ ansible_env.HOME }}
+
+   - name: remove maven archive
+     file:
+       scr: {{ ansible_env.HOME}}/apache-maven-3.6.0-bin.tar.gz
+       state: absent

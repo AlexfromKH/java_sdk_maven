@@ -8,31 +8,31 @@
   connection: ssh
   tasks:
 
-   - name: install JDK8
-     apt:
-       name: openjdk-8-jdk
-       state: present
-       update_cache: yes
-     notify: 
-       - add Add $JAVA_HOME environment variable
+  - name: install JDK8
+    apt:
+      name: openjdk-8-jdk
+      state: present
+      update_cache: yes
+    notify:
+      - add $JAVA_HOME environment variable
 
-   - name: download marven in user home dir
-     file:
-       scr: http://apache.lauf-forum.at/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz
-       dest: {{ ansible_env.HOME }}
-     notify:
-       - remove maven archive
+  - name: unzip maven to user home dir
+    unarchive:
+      src: http://apache.lauf-forum.at/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz
+      dest: /home/ansible/
+      remote_src: yes
+    notify: 
+      - remove maven archive
+      - add maven bin directory to the PATH
 
-   - name: unzip maven to user home dir
-     unarchive:
-       scr: apache-maven-3.6.0-bin.tar.gz
-       dest: {{ ansible_env.HOME }}
+  handlers:
+  - name: add $JAVA_HOME environment variable
+    shell: echo 'JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre/' >> /etc/environment
 
-   handlers:
-   - name: add $JAVA_HOME environment variable
-     shell: echo 'JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre/bin' >> /etc/environment
+  - name: add maven bin directory to the PATH
+    shell: echo 'PATH="$PATH:/home/ansible/apache-maven-3.6.0/bin"' >> /etc/environment
 
-   - name: remove maven archive
-     file:
-       scr: {{ ansible_env.HOME}}/apache-maven-3.6.0-bin.tar.gz
-       state: absent
+  - name: remove maven archive
+    file:
+      path: /home/ansible/apache-maven-3.6.0-bin.tar.gz"
+      state: absent

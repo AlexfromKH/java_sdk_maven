@@ -24,13 +24,20 @@
     notify: 
       - remove maven archive
       - add maven bin directory to the PATH
+      - source /home/ansible/.profile
 
   handlers:
   - name: add $JAVA_HOME environment variable
-    shell: echo 'JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre/' >> /etc/environment
+    shell: echo 'JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre/' >> /home/ansible/.profile
 
   - name: add maven bin directory to the PATH
-    shell: echo 'PATH="$PATH:/home/ansible/apache-maven-3.6.0/bin"' >> /etc/environment && source /etc/environment
+    shell: echo 'PATH="$PATH:/home/ansible/apache-maven-3.6.0/bin"' >> /home/ansible/.profile
+
+  - name: source /home/ansible/.profile
+    sudo: no
+    shell: source /etc/profile
+    args:
+      executable: /bin/bash
 
   - name: remove maven archive
     file:

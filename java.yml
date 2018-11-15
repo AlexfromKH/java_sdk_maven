@@ -1,17 +1,36 @@
----
+--- # Install JAva JDK SE11,and Maven
 #[local]
 #localhost
 #[ubuntu]
 #192.168.88.11
 
-- hosts: all
+- hosts: ubuntu
   gather_facts: yes
   become: yes
+  become_method: sudo
+  connection: ssh
   tasks:
-  #  - name: test command
-  #    command: echo 'alles leuft gut soweit'
+#   - name: copy JDK rpm file
+#     copy:
+#       src: jdk-11.0.1_linux-x64_bin.rpm
+#       dest: /home/ansible
+#       owner: ansible
+#       group: ansible
+#       mode: 755
 
-    - name: Display the config
-      debug:
-        msg: "The hostname is {{ ansible_hostname }} and the OS is {{ ansible_version }}"
+   - name: install JDK8
+     apt:
+       name: openjdk-8-jdk
+       state: present
+       update_cache: yes
+
+   - name: Add $JAVA_HOME environment variable
+     shell: echo 'JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre/bin' >> /etc/environment      
+#   - name: Source /etc/environment
+#     shell: source /etc/environment
+
+#   - name: remove jdk rpm file
+#     file:
+#       path: jdk-11.0.1_linux-x64_bin.rpm
+#       state: absent
 ...

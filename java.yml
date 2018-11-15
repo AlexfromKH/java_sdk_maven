@@ -16,19 +16,21 @@
      notify: 
        - add Add $JAVA_HOME environment variable
 
-   handlers:
-   - name: add $JAVA_HOME environment variable
-     shell: echo 'JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre/bin' >> /etc/environment      
-
    - name: download marven in user home dir
      file:
        scr: http://apache.lauf-forum.at/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz
        dest: {{ ansible_env.HOME }}
+     notify:
+       - remove maven archive
 
    - name: unzip maven to user home dir
      unarchive:
        scr: apache-maven-3.6.0-bin.tar.gz
        dest: {{ ansible_env.HOME }}
+
+   handlers:
+   - name: add $JAVA_HOME environment variable
+     shell: echo 'JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre/bin' >> /etc/environment
 
    - name: remove maven archive
      file:
